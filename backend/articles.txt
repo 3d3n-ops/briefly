@@ -1,0 +1,178 @@
+Title: Meet Ramp Research: Our Agentic Data Analyst
+URL: https://engineering.ramp.com/post/meet-ramp-research
+Article:
+Meet Ramp Research: Our Agentic Data Analyst
+
+This article covers how we built Ramp Research, an AI agent that addressed our data bottleneck and is now answering thousands of questions per month, reshaping our decision-making culture and saving our customers time.
+
+Data questions don't exactly crash the system, but they quietly slow every decision. Each one becomes a ping in #help-data , stacking up behind a single on-call analyst. Tabs sprawl – across Looker, Snowflake, and dbt docs – and the answer lands hours later, after the decision window has narrowed.
+
+This is the data bottleneck. The consequences are that decisions wait and most questions go unasked, as people hesitate to add to the growing queue of requests. This bottleneck is often treated as an inevitable byproduct of scale, but we don't accept that.
+
+Building Ramp Research
+
+Ramp Research is our in-house AI analyst agent, able to answer data* questions directly in Slack, 24/7, in minutes – not hours. Since launching in early August, Ramp Research has answered over 1,800 data questions across more than 1,200 conversations with 300 different users.
+
+*Ramp Research does not have access to any personally identifiable information (PII).
+
+Defining the Search Space
+
+Large-scale data, without the necessary context, is nearly impossible to use. At Ramp, that context lives in dbt, Looker, and Snowflake. We aggregated and indexed this metadata, allowing the agent to fetch the right models and form precise queries.
+
+Even with the relevant data context, the agent struggled to connect its understanding of our data to the different domains of Ramp’s business. Much of that knowledge is tacit and lives with domain owners on the analytics team. To impart our agent with an expert-level understanding of each domain, we relied on domain owners to write up technical documentation on their respective areas. These documents were then organized into a file system that Ramp Research can access as needed.
+
+Scale remained the challenge. Our analytics warehouse has thousands of tables and views, and many questions require row-level inspection to get right. These requirements were perfect for an agentic solution. Rather than rely exclusively on generic compression methods, such as keyword or vector search, we gave the agent tools to inspect column values, branch, and backtrack – reasoning through the data the way a human analyst would.
+
+Slack as an Interface
+
+Slack is our internal hub, so it was the obvious choice of interface for Ramp Research. The #ramp-research-beta channel now has 500+ members, many of whom have helped guide our development.
+
+Data Previews
+
+Early on, users had to open Redash or Snowflake to inspect data and verify answers. We've added in-thread CSV previews so they can validate results without leaving Slack. This has been especially helpful to users less familiar with SQL and BI tools.
+
+Multi-turn Conversations
+
+Making each thread stateful has allowed users to clarify intent, collaborate in threads, and reason through complex problems with Ramp Research as their data expert. The agent's performance also saw an end-to-end improvement as a result.
+
+Beyond #ramp-research-beta
+
+Delivering Ramp Research as a Slack app has enabled teams to plug it into existing workflows, adding it to alert channels to diagnose failed transactions and project channels to scope out new features.
+
+Evaluations
+
+Our first approach was to implement a human-in-the-loop system in Slack that pinged domain owners for every in-domain question. This solution didn’t scale, as effort still increased with request volume and reintroduced the core bottleneck.
+
+Rather than evaluating each question, we shifted to evaluating our context layer. With domain experts, we listed the high-priority concepts in every domain and wrote end-to-end tests. These exposed blind spots but gave little diagnosis as to why Ramp Research would pass or fail.
+
+So we built a Python mini-framework in our dbt project. It asserts not only on the final answer but also the intermediate steps, including expected tool calls, table references, and query shape. This suite enabled us to close the feedback loop: update context, run tests, and confirm improvements.
+
+Scaling our Data-Driven Culture
+
+Collapsing the cost of asking a question to near-zero changes who asks, when they ask, and what they ask. The result is a 10-20x increase in the number of questions people ask. Most of that growth comes from questions that previously died in drafts or never left someone’s head.
+
+In the last 4 weeks, Ramp Research answered 1,476 questions in #ramp-research-beta, compared to 66 answered in #help-data.
+
+That demand matters because small edges compound. Like counting cards, a one- or two-point lift in decision quality doesn't show up in the margin, but spread across thousands of pricing tweaks, GTM filters, and feature rollouts, it becomes material. We haven’t changed the stakes of any single hand, but we’ve raised the floor on all of them.
+
+These benefits reach customers in the form of faster answers from account managers, better bug isolation, and sharper roadmap bets, just to name a few. When it’s trivial to validate a hypothesis, our team can move with more conviction and less rework, allowing us to focus on what matters: shipping delightful products that save our customers time and money.
+
+Looking Forward
+
+Increasingly, we're seeing teams start to use Ramp Research to automate their existing workflows, like generating customer case studies and detecting common fraud patterns. Making Ramp Research available internally via a headless API will allow teams to further customize the agent for their specific use cases.
+
+The context layer behind Ramp Research is also an incredibly valuable technical asset. Further automating the maintenance and improvement process would allow our team to expand its coverage beyond our analytics database.
+
+Ultimately, we see Ramp Research as the first step towards building the future of work at Ramp, where agents and people work collaboratively to deliver better, faster results.
+--------------------------------------------------------------------------------
+Title: Forward Deployed Engineering
+URL: https://engineering.ramp.com/post/forward-deployed-engineering
+Article:
+Forward Deployed Engineering
+
+Leo Mehr – August 5, 2025
+
+Forward Deployed Engineering (FDE) has become the hottest new role in tech 🔥
+
+"Why the Forward Deployed Engineer Is the Hottest Job in Startups" - a16z
+
+"Forward-deployed engineers have become one of the most strategic assets in enterprise AI companies" - Foundation Capital
+
+"2025: The Year Of The Forward-Deployed Software Engineer" - Crunchbase, Felicis Ventures
+
+The future of B2B software will belong to teams that can integrate faster, customize deeper, and learn directly from customers — that's why FDE is exploding. This post covers the history of the role, lessons from starting and scaling FDE at Ramp, and advice for those building customer-facing engineering teams.
+
+What is FDE?
+
+Palantir famously created the role after its founding in 2003 for software engineers literally deployed at military sites and customer offices. This allowed engineers to work extremely closely with customers, understand their problems, and iterate quickly.
+
+For over 10 years, it was niche and specific to Palantir, but in the late 2010s it started to proliferate. Scale AI and C3.ai adopted the exact same title, and Databricks and Snowflake built similar functions. These companies had a similar trait in common — complex software deployments with huge contracts that benefitted from highly integrated, custom implementations.
+
+Now, the role and variants of customer engineering are becoming ubiquitous in nearly every top B2B company — OpenAI, Anthropic, Databricks, Ramp, and countless earlier-stage AI startups such as Sierra, Decagon, LangChain, ElevenLabs, etc.
+
+The role differs at each based on org size, customer base, deployments, and the boundaries of ownership with other solutions functions. But at it's core it remains the same — to deliver value to customers with the highest speed and quality.
+
+Why has it grown so much?
+
+FDE's growth starts with why B2B companies must serve enterprise.
+
+It's clear that the largest B2B SaaS businesses in the world win in enterprise. And it's not just market cap size, but also the growth rates of these businesses. The average CAGR (compound annual growth rate) of the non-enterprise group is 15.2%, and of the enterprise group is 29.6%.
+
+If you want to win in enterprise, you must be able to deeply customize and effectively implement your software. Enterprise customers have complex, legacy systems that have been around for decades, processes and workflows that must be replaced — and often these must be integrated with the software you're providing.
+
+This Foundation Capital article gives a compelling explanation why companies focusing on enterprise must provide exceptional quality of service, and why it's so hard. B2B businesses are not delivering software, but outcomes, and "how you integrate, embed, and operate becomes the moat."
+
+And to achieve these outcomes, they observe that "Forward-deployed engineers have become one of the most strategic assets in enterprise AI companies."
+
+FDE at Ramp
+
+FDE at Ramp was born from the necessity of scaling enterprise. The company was founded in 2019, but it wasn't until fall 2023 that FDE started to take shape when Calvin jumped in to help support our very largest customers. I joined a team of two engineers and in the early days we were constantly fighting fires and simply trying to survive.
+
+Since then, we've nearly 10x'd and grown into a respected, thriving team within the organization focused on doing right by our customers. We rallied around a simple mission — to win in enterprise. As our team grew and progressed states from falling behind to innovating (see Will Larson's model of team states), we were able to expand our focus beyond just serving our individual largest customers. Today, FDE builds generalized features, platforms, and AI that increase our rate of reaching product-market fit in Enterprise, and that enable massive new segments like healthcare and government.
+
+AI has been a crucial part of our team's recent growth as well. We are very heavy users of Cursor and Claude Code, and have GenAI projects across all of our pods to build platform functionality that accelerates our ability to serve the complex needs of our enterprise customers.
+
+Here's what we learned over the past several years about how to run and grow our FDE team.
+
+Team operating model: map to the customer lifecycle
+
+We work with customers through their entire lifecycle: from when they are prospects in the sales funnel, to implementation and rollout, to long-tail support. This has multiple benefits:
+
+We maintain context about each customer which helps with continuity of important relationships and understanding of nuances in their environment and preferences. We are able to start scoping early and reduce the complexity of certain asks, pushing back where appropriate. This is the first step of Elon's algorithm: question every requirement. Scoping is crucial for FDE because it allows us to deliver value more quickly to our customers and simply to get more done. We stay accountable for long-term customer success, not just moving them to closed/won, not just completing implementation, but ensuring they continue getting the full value of Ramp even after they've onboarded.
+
+The early days were chaotic and very demanding with a small team. In order to become more sustainable and deliver on our commitments, we needed focus. We used the following prioritization as our guide:
+
+🤲 Serve existing customers well. The product must actually work well for enterprise customers, otherwise growth doesn't make sense. It also increases opportunity for positive reference checks and mitigates churn risk, both of which are crucial for growth. 🏎️ Increase efficiency of onboarding and activating new customers. Implementation is the most complex and demanding part of enterprise — it's usually the bottleneck on our ability to scale. 📈 Expand our product capabilities to increase our TAM. After several months, we had the bandwidth to look forward and decide where to invest. By proactively identifying the biggest product gaps and investing in new capabilities, we've enabled our sellers and fueled faster growth.
+
+FDE Principles
+
+In the last year and a half, our team grew from 2 to 16 FDEs and expanded to multiple new product domains and verticals. Several themes surfaced in our work and we've developed them into our core team principles:
+
+Always be scoping Before FDE, there was a pattern that we observed across teams and in other companies. A customer would ask for something, the AE or CSM would figure out the scope and deliver it to product engineering, and they would scope out a mega-project that would take months to deliver. The project would lag behind schedule, requirements would change (possibly taking into account the customer's actual needs), and eventually everyone would be frustrated — the customer, the AE/CSM, the PMs, and the engineers. It is a lose-lose situation that unfortunately occurs all too often.
+
+Our goal in FDE has been to prevent this from ever happening. When a customer asks for something, we talk directly to them and question all requirements. A couple months ago, one customer in onboarding was blocked by a feature gap that we estimated would take ~3 days of eng work. We hopped on a call with them and figured out a workaround right there — if we had taken the request at face value, it would have needlessly cost us multiple engineer-days.
+
+We have countless stories where we prevent days or even weeks of eng work by deeply questioning and understanding requirements, thinking creatively about workarounds or how to generalize a solution, or otherwise making a quick hack to buy time for a core roadmap feature to ship.
+
+Just like sales' "always be closing", the main FDE mantra is "always be scoping". Generalize our work Though we solve for individual customer's needs, we always strive to generalize our work. We frequently ask: do I hack something together for a customer, or take more time to build something hundreds or thousands of customers will use? We prefer the general feature because good interfaces and platforms are what make software powerful and scalable. And ad-hoc customizations pollute the codebase, increase entropy, and decrease maintainability over time.
+
+Of course, this principle is at odds with "Always be Scoping" which advocates to reduce scope and ship the MVP that solves the specific customer problem.
+
+This is where taste and skill of an FDE are crucial. We constantly must decide whether and how to generalize work that we do. Do more One of Ramp's six company values is "Amp it up", inspired by Frank Slootman's book of the same name. We deeply believe in this. Speed matters, and I believe Ramp's growth is largely due to this value. We see the massive opportunity to disrupt an industry, and believe that the greats who've made the best products in the world (e.g. Steve Jobs, Elon Musk) bring this mentality. Do More is about ambitiously pursuing opportunity and moving fast to get there.
+
+Yet there is nuance in how to actually Do More. We specifically believe in keeping pace and iteration as high as possible. Especially when being so close to customers, where requirements are often flexible and uncertain, and where feedback is crucial. Perfect is the enemy of good. And incremental progress decreases thrash and increases momentum.
+
+We also believe that you can Do More by taking on the perspective of extreme ownership. We are responsible for customer outcomes. We are on the line if the product doesn't work well for them. We must find a way to get things done. I love this post which captures the essence of taking ownership. We win when our customers win We are nothing without our customers. We believe in Unreasonable Hospitality. We tie our team metrics to our customers and business outcomes as closely as possible, which keeps us grounded and connected to the original reason our team was created.
+
+We see how the natural force of organizational growth segregates engineers from customers, and we believe that FDE creates a conduit for bringing more customer-first mentality into the engineering org. We have the benefit of serving our largest customers and more complex deals, which we find engineers and product managers across the organization are often interested to learn from.
+
+How we hire FDEs
+
+In order to cultivate a team that serves the above goals and principles, we have taken an opinionated approach to hiring. Below are the main axes that we evaluate FDE candidates on:
+
+Drive and work ethic Folks who work hard and are driven to achieve our team's and our customers' goals will figure out what's needed and do what it takes to simply get things done. We've found that this is the single best predictor of real-world performance. And we're not the only ones who have noticed this. See Marc Andreessen's hire people with drive and Alex Wang's hire people who give a shit. Engineering fundamentals We are an engineering team. We spend most of our time building features, many of which are shipped in the core product. It's important that candidates demonstrate competency in the basics of writing code that gets things done.
+
+However, contrary to other hiring philosophies, we see technical performance as a bar to pass but avoid optimizing it further. We validate fundamentals — coding, debugging, data structures, system design — but don't over-index on "perfection."
+
+Why? AI tooling makes it easier than ever to learn and execute on technical problems. If you're driven and otherwise aligned with the FDE role, you can figure it out. We've seen candidates who performed just okay (mixed/soft yeses) in coding interviews turn out to be incredible FDEs once they joined because they hustled, learned, and shipped a ton. Customer empathy This specifically means that a candidate can understand what a customer is feeling and has the emotional intelligence to know how to interact smoothly with them. This is crucial because FDEs must be able to handle tense situations, such as delays, bugs, and de-scoping. FDEs must negotiate scope and ensure that we are building exactly the right things for our customers. FDEs must be able to give an enthusiastic yes to rational customer requests while pushing back against unreasonable ones.
+
+Though previous experience in a customer-facing role helps, it's actually not necessary. We've found that there are other signals that are predictive of someone having the capacity to do this well. For example, roles where a candidate has been responsible for the success of others. We find that folks who have been instructors or teaching assistants (and actually enjoyed it) have the ability and interest to do this well. Or if they've gravitated towards work that enables others in previous jobs, such as an internal platform team where they get very close to their users. Great communication FDEs spend a lot of time talking directly with customers and with other teams. We are probably the most cross-functional and comms-heavy engineering team in the org. It's important that we hire people who are great listeners and can clearly communicate their thoughts in a compelling way. When we interview folks, we're looking to come away with assessments such as the following: "The candidate is exceptionally clear in conveying their ideas. I easily grasp everything they explain, and learned something from just speaking with them." "The candidate has eloquence, clarity, and comfort in communication that would make me excited to have them leading a meeting with a customer."
+
+
+
+Of the 16 FDEs on the team, 7 of us are previous founders! If you have entrepreneurial or early-stage startup experience or aspirations, we find this has especially high relevance for FDE.
+
+Conclusion
+
+Here are the key takeaways:
+
+Forward Deployed Engineering is a strategic unlock for modern B2B companies. It will differ depending on company size, ICP, and ownership boundaries with other functions like solutions. And there are caveats for when it's not applicable (consumer products, PLG-only companies, etc.). But at it's core, it remains the same — engineers who deliver value directly to customers with the highest speed and quality.
+
+It will differ depending on company size, ICP, and ownership boundaries with other functions like solutions. And there are caveats for when it's not applicable (consumer products, PLG-only companies, etc.). But at it's core, it remains the same — engineers who deliver value directly to customers with the highest speed and quality. Customer proximity drives better outcomes. Embedding engineers across the customer lifecycle (from sales to support) ensures deeper understanding, better scoping, and faster delivery.
+
+Embedding engineers across the customer lifecycle (from sales to support) ensures deeper understanding, better scoping, and faster delivery. The best FDEs blend technical ability with ownership and empathy. When recruiting for this role, what matters most isn't technical perfection — it's drive, communication, and the will to solve customer problems end-to-end.
+
+When recruiting for this role, what matters most isn't technical perfection — it's drive, communication, and the will to solve customer problems end-to-end. Scoping and generalization are the art of the role. Knowing when to MVP a quick fix vs. build a scalable solution is where FDEs exercise the most judgment and impact.
+
+The next generation of B2B companies will be won by engineering teams that are as customer-focused as they are technically strong. FDE is one of the most exciting new roles in tech that is gaining traction and demand for talent at top-tier companies. I expect to see high growth and demand for the role in the years ahead, and its establishment as a crucial function in most B2B companies.
+--------------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+openai 
+requests 
+beautifulsoup4 
+newspaper3k
+python-dotenv
+feedparser
+playwright
+psycopg2-binary 
+sqlalchemy
