@@ -53,9 +53,17 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     }
   }
 
-  // Randomize the order of blog posts
-  const shuffledPosts = [...posts].sort(() => Math.random() - 0.5)
-  console.log(`Randomized order of ${shuffledPosts.length} blog posts`)
-
-  return shuffledPosts
+  // Use cached randomization (changes every 12 hours)
+  try {
+    const { getCachedBlogPosts } = await import('./blog-cache')
+    const shuffledPosts = await getCachedBlogPosts(posts)
+    console.log(`Retrieved ${shuffledPosts.length} blog posts with 12-hour cached randomization`)
+    return shuffledPosts
+  } catch (error) {
+    console.error('Error with cached randomization, falling back to simple shuffle:', error)
+    // Fallback to simple randomization if caching fails
+    const shuffledPosts = [...posts].sort(() => Math.random() - 0.5)
+    console.log(`Fallback: Randomized order of ${shuffledPosts.length} blog posts`)
+    return shuffledPosts
+  }
 }

@@ -1,8 +1,12 @@
+'use client'
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { supabase, BlogPost } from '@/lib/supabase'
+import StreamingText from '@/components/StreamingText'
+import { useEffect, useState } from 'react'
 
 interface BlogPostPageProps {
   params: {
@@ -38,10 +42,48 @@ async function getBlogPost(id: string): Promise<BlogPost | null> {
   return data as BlogPost
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost(params.slug)
+export default function BlogPostPage({ params }: BlogPostPageProps) {
+  const [post, setPost] = useState<BlogPost | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  if (!post) {
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const postData = await getBlogPost(params.slug)
+        if (!postData) {
+          setError(true)
+        } else {
+          setPost(postData)
+        }
+      } catch (err) {
+        console.error('Error fetching blog post:', err)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPost()
+  }, [params.slug])
+
+  const handleReadingComplete = () => {
+    // You can add analytics or other completion logic here
+    console.log('Reading completed for:', post?.title)
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading article...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !post) {
     notFound()
   }
 
@@ -102,20 +144,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
           
           <div className="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-8">
-            <div className="prose prose-invert max-w-none">
-              <div className="whitespace-pre-wrap text-gray-300 leading-relaxed text-lg">
-                {post.summary}
-              </div>
-            </div>
+            <StreamingText 
+              text={post.summary}
+              speed={35}
+              autoStart={true}
+              className="min-h-full"
+              onComplete={handleReadingComplete}
+            />
           </div>
           
           {/* Fixed Bottom Button */}
-          <div className="border-t border-black p-4 flex justify-center">
+          <div className="border-t border-gray-800 p-4 flex justify-center">
             <Button 
               variant="outline" 
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-300"
             >
-              Completed reading
+              <span className="flex items-center space-x-2">
+                <span>Completed reading</span>
+                <span className="text-xs opacity-70">(scroll to review)</span>
+              </span>
             </Button>
           </div>
         </div>

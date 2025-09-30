@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { getBlogPosts, BlogPost } from '@/lib/supabase'
+import { CacheStatus } from '@/components/CacheStatus'
 
 export default async function Home() {
   const blogPosts = await getBlogPosts()
@@ -76,6 +77,9 @@ export default async function Home() {
           </p>
         </div>
       </footer>
+
+      {/* Cache Status (Development Only) */}
+      <CacheStatus />
     </div>
   )
 }
