@@ -12,7 +12,10 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Error fetching images:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch images' },
+      { 
+        error: 'Failed to fetch images',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

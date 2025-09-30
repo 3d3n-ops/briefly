@@ -8,7 +8,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error getting cache status:', error)
     return NextResponse.json(
-      { error: 'Failed to get cache status' },
+      { 
+        error: 'Failed to get cache status',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

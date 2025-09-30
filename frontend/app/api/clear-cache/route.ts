@@ -8,7 +8,10 @@ export async function POST() {
   } catch (error) {
     console.error('Error clearing cache:', error)
     return NextResponse.json(
-      { error: 'Failed to clear cache' },
+      { 
+        error: 'Failed to clear cache',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

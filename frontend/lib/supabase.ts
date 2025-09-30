@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_DATABASE_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_DATABASE_KEY || ''
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -30,40 +30,19 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     return []
   }
 
-  // Fetch deterministic images for the blog posts using direct blob API
+  // Return posts without images during build time to avoid rate limiting
+  // Images will be fetched on the client side
   const posts: BlogPost[] = data || []
-  console.log(`Processing ${posts.length} blog posts`)
-  
-  if (posts.length > 0) {
-    try {
-      const { getImageForBlogPost } = await import('./vercel-blob')
-      
-      // Assign deterministic images to each post based on their ID
-      for (const post of posts) {
-        const imageUrl = await getImageForBlogPost(post.id)
-        if (imageUrl) {
-          post.image_url = imageUrl
-          console.log(`Assigned image to post ${post.id}: ${post.title}`)
-        } else {
-          console.log(`No image available for post ${post.id}: ${post.title}`)
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching deterministic images:', error)
-    }
-  }
 
   // Use cached randomization (changes every 12 hours)
   try {
     const { getCachedBlogPosts } = await import('./blog-cache')
     const shuffledPosts = await getCachedBlogPosts(posts)
-    console.log(`Retrieved ${shuffledPosts.length} blog posts with 12-hour cached randomization`)
     return shuffledPosts
   } catch (error) {
     console.error('Error with cached randomization, falling back to simple shuffle:', error)
     // Fallback to simple randomization if caching fails
     const shuffledPosts = [...posts].sort(() => Math.random() - 0.5)
-    console.log(`Fallback: Randomized order of ${shuffledPosts.length} blog posts`)
     return shuffledPosts
   }
 }
