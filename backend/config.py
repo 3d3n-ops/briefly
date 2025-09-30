@@ -1,7 +1,7 @@
 # List of tech blog URLs to scrape articles from
 TECH_BLOG_URLS = [
     "https://www.docker.com/blog/",
-    "https://blog.x.com/engineering/en_us/"
+    "https://blog.x.com/engineering/en_us/",
     "https://theguardian.engineering/blog/",
     "https://asana.com/inside-asana/engineering-spotlight/",
     "https://medium.com/groupon-eng/",
@@ -11,8 +11,7 @@ TECH_BLOG_URLS = [
     "https://resend.com/blog?category=engineering/",
     "https://www.mintlify.com/blog/",
     "https://cursor.com/blog/",
-    "https://groq.com/blog/",
-    ""
+    "https://groq.com/blog/"
 ]
 
     # "https://medium.com/pinterest-engineering",
