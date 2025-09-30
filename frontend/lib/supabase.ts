@@ -14,9 +14,14 @@ export interface BlogPost {
 }
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
+  if (!process.env.NEXT_PUBLIC_DATABASE_URL || !process.env.NEXT_PUBLIC_DATABASE_KEY) {
+    console.error('Missing Supabase environment variables. Please check your .env.local file.')
+    return []
+  }
+
   const { data, error } = await supabase
     .from('article_summaries')
-    .select('*')
+    .select('id, title, summary, url, created_at')
     .order('created_at', { ascending: false })
 
   if (error) {
