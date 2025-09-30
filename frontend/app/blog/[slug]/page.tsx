@@ -22,7 +22,20 @@ async function getBlogPost(id: string): Promise<BlogPost | null> {
     return null
   }
 
-  return data
+  // Fetch the same deterministic image for this blog post
+  if (data) {
+    try {
+      const { getImageForBlogPost } = await import('@/lib/vercel-blob')
+      const imageUrl = await getImageForBlogPost(data.id)
+      if (imageUrl) {
+        (data as BlogPost).image_url = imageUrl
+      }
+    } catch (error) {
+      console.error('Error fetching deterministic image:', error)
+    }
+  }
+
+  return data as BlogPost
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -48,7 +61,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <main className="flex h-[calc(100vh-80px)]">
         {/* Fixed Image and Title Section */}
         <div className="w-1/2 border-r border-black p-8 flex flex-col hidden lg:flex">
-          <div className="w-full h-96 bg-gray-700 rounded-lg mb-6"></div>
+          <div className="w-full h-96 bg-gray-700 rounded-lg mb-6 overflow-hidden">
+            {post.image_url ? (
+              <img 
+                src={post.image_url} 
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                <span className="text-gray-500">No image available</span>
+              </div>
+            )}
+          </div>
           <h1 className="text-3xl font-bold mb-6 leading-tight">
             {post.title}
           </h1>
@@ -58,7 +83,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="w-full lg:w-1/2 flex flex-col">
           {/* Mobile Title Section */}
           <div className="lg:hidden p-6 border-b border-gray-800">
-            <div className="w-full h-48 bg-gray-700 rounded-lg mb-4"></div>
+            <div className="w-full h-48 bg-gray-700 rounded-lg mb-4 overflow-hidden">
+              {post.image_url ? (
+                <img 
+                  src={post.image_url} 
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                  <span className="text-gray-500">No image available</span>
+                </div>
+              )}
+            </div>
             <h1 className="text-2xl font-bold leading-tight">
               {post.title}
             </h1>

@@ -32,7 +32,19 @@ export default async function Home() {
               <Link key={post.id} href={`/blog/${post.id}`}>
                 <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors cursor-pointer group">
                   <CardHeader className="p-0">
-                    <div className="w-full h-48 bg-gray-700 rounded-t-lg mb-4 group-hover:bg-gray-600 transition-colors"></div>
+                    <div className="w-full h-48 bg-gray-700 rounded-t-lg mb-4 group-hover:bg-gray-600 transition-colors overflow-hidden">
+                      {post.image_url ? (
+                        <img 
+                          src={post.image_url} 
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <span className="text-gray-500">No image</span>
+                        </div>
+                      )}
+                    </div>
                   </CardHeader>
                   <CardContent className="p-6">
                     <CardTitle className="text-xl mb-3 group-hover:text-gray-300 transition-colors">
